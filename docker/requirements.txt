@@ -1,0 +1,14 @@
+scikit-learn
+tensorflow
+plotly
+cryptography
+Flask
+numpy
+Pillow
+pyecharts
+pymysql
+requests
+# selenium-wire
+# selenium
+pandas
+matplotlib

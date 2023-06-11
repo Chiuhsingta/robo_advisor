@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A預測功能</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles.css') }}"> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    
+
+      <style>
+
+        .date {
+            font-size: 10px;
+            font-family: Arial, sans-serif;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .button1{
+            display: inline-block;
+            background-color: #C7E2C3;
+            border-color: #C7E2C3;
+            border-radius: 0.5rem;
+            color: #303030; /* 美化的字体颜色 */
+            font-family: "Helvetica Neue", sans-serif; /* 字体 */
+            font-size: 22px; /* 字号 */
+            font-weight: 550; /* 字体粗细 */
+            letter-spacing: 1.5px; /* 字间距 */
+            text-transform: uppercase; /* 文字大写 */
+            text-decoration: none; /* 文字无下划线 */
+            padding: 8px 15px; /* 按钮内边距 */
+            transition: all 0.3s ease-in-out; /* 过渡效果 */
+            width: 100%;
+            border:3px ;
+        }
+        .button1:hover {
+            background-color: #b2cfae; /* 鼠标移上去时的背景颜色 */
+            border-color: #b2cfae; /* 鼠标移上去时的边框颜色 */
+            color: white; /* 鼠标移上去时的字体颜色 */
+        }
+
+
+
+        .menu{
+            background-color: #C7E2C3;
+        }
+        .main-row{
+            min-height: 100vh;
+        }
+        .img-row{
+            min-height: 80vh;
+        }
+        .date-row{
+            min-height: 20vh;
+        }
+        .menu-button{
+            margin-top:5vh;
+        }
+        .score-col{
+            margin-top:5vh;
+        }
+        .card-text{
+            text-align: center;
+            font-weight: 550; /* 字体粗细 */
+        }
+        .card-header{
+            font-size: 18px; /* 字号 */
+            font-weight: 550; /* 字体粗细 */
+        }
+        .menu-logo{
+            font-size: 40px;
+            letter-spacing: 15px;
+            font-weight: 550;
+            text-decoration: none;
+            margin-top: 60px;
+        }
+        .menu-logo2{
+            font-size: 20px;
+            letter-spacing: 7px;
+            font-weight: 550;
+            text-decoration: none;
+            margin-top: -15px;
+        }
+        hr{
+            border-top: 3px solid #395d39;
+        }
+        .score-text{
+            font-size: 40px; /* 字号 */
+            font-weight: 550; /* 字体粗细 */
+            letter-spacing: 1.5px; /* 字间距 */
+            text-decoration: none; /* 文字无下划线 */
+        }
+        .image{
+            min-height: 100vh;
+        }
+        .menu-logo{
+            display: inline-block;
+            border-radius: 0.5rem;
+            color: #303030; /* 美化的字体颜色 */
+            font-family: "Helvetica Neue", sans-serif; /* 字体 */
+            font-size: 22px; /* 字号 */
+            font-weight: 550; /* 字体粗细 */
+            letter-spacing: 1.5px; /* 字间距 */
+            text-transform: uppercase; /* 文字大写 */
+            text-decoration: none; /* 文字无下划线 */
+            padding: 8px 15px; /* 按钮内边距 */
+            transition: all 0.3s ease-in-out; /* 过渡效果 */
+            width: 100%;
+            border:3px ;
+        }
+        .alert-orange{
+            background-color: #FF9833;
+        }
+        .alert-orange2{
+            background-color: #FFD8B1;
+        }
+        .photo{
+            display: inline-block;
+            position: absolute;
+            top: -10px;
+            left: 50px;
+            max-width: 10px;
+            max-height: 10px;
+            transform: scale(0.20);
+        }
+        .scrollable-container1 {
+            width: 90%; /* 设置容器的宽度 */
+            height: 120px; /* 设置容器的高度 */
+            overflow-x: scroll; /* 当内容超过容器宽度时，显示水平滚动条 */
+            overflow-y: hidden;
+        }
+
+        .scrollable-row {
+        display: flex; /* 把他們放在同一個ROW上 */
+        }
+        
+        .scrollable-container {
+            height: 500px; /* 设置容器的固定高度 */
+            overflow-y: scroll; /* 当内容超过容器高度时，显示垂直滚动条 */
+            overflow-x: hidden;
+        }
+        .warning-reminder{
+            width:100%;
+            height:100%;
+            display:flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+    
+        
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row main-row">
+            <div class="col-2 menu text-center">
+                <div class="menu-button">
+                    <div class="photo">
+                        <img src="../static/photo.png" />
+                    </div>
+                    <div class="menu-logo"><p>
+                        {% if 'username' in session %}
+                            <p>{{ session['username'] }}</p>
+                            <p class="menu-logo2">Welcome</p>
+                        {% else %}
+                            <p>Please log in to view this page.</p>
+                        {% endif %} </p>
+                        
+                    </div>
+                        <hr class="h-color">
+                        <div class="left-button">
+                            <form action="/effectiveness" method="GET" >
+                                    <button class="button1">   
+                                        賣場成效總覽
+                                    </button>
+                            </form>
+                        </div>
+                        <br>
+                        <div class="left-button">
+                            <form action="/merchandising" method="GET" >
+                                    <button class="button1">   
+                                        重點監測商品
+                                    </button>
+                            </form>
+                        </div>
+                        <br>
+                        <div class="left-button">
+                            <form action="/execution" method="GET">
+                                <button class="button1">
+                                    BCG 營銷策略
+                                </button>
+                            </form>
+                        </div>
+                        <br>
+                        <div class="left-button">
+                            <form action="/datamonitoring" method="GET">
+                                <button class="button1">
+                                    競品數據監測
+                                </button>
+                            </form>
+                        </div>
+                        <br>
+                        <div class="left-button">
+                            <form action="/FBdata" method="GET">
+                                <button class="button1">
+                                    Facebook 
+                                    <br>
+                                    圖素檢測
+                                </button>
+                            </form>
+                        </div>
+                </div>
+            </div>           
+            <div class="col-8 text-center">
+                <div class="row img-row">
+                    <div class="col-12">
+                            {{ chart_html|safe }}                        
+                    </div>
+                </div>  
+                <div class="row date-row">
+                    <div class="col-2">
+                        <div class="date">
+                            <form action="/effectiveness" method="POST">
+                                <br>
+                                <label for="start_date">請選擇日期 :</label>
+                                <br>
+                                <input type="date" id="start_date" name="start_date" min="2023-05-01" max="{{today}}" value="{{ start_date_str }}" />
+                                <div style="float:right">
+                                    <input type="submit" value="搜尋">   
+                                </div>  
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-10">
+                        {% set da = da | default({})%}
+                        <div class="row">
+                            <div class="scrollable-container1">
+                                <div class="scrollable-row">
+                                    <div class="col-3">
+                                        <div class="card text-bg-light mb-3" style="width: 8rem;">
+                                            <div class="card-header">銷售額
+                                            </div>
+                                            <div class="card-body">
+                                            <p class="card-text">{{ "{:,}".format(da.get("total_sales")|int)}}台幣</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="card text-bg-light mb-3" style="width: 8rem;">
+                                        <div class="card-header">成銷量
+                                        </div>
+                                        <div class="card-body">
+                                        <p class="card-text">{{ "{:,}".format(da.get("sale_products")|int)}}個</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="card text-bg-light mb-3" style="width: 8rem;">
+                                        <div class="card-header">商品瀏覽數</div>
+                                        <div class="card-body">
+                                        <p class="card-text">{{ "{:,}".format(da.get("product_page_views")|int)}}次</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="card text-bg-light mb-3" style="width: 8rem;">
+                                        <div class="card-header">訪客數</div>
+                                        <div class="card-body">
+                                        <p class="card-text">{{ "{:,}".format(da.get("unique_visitors")|int)}}位</p>
+                                        </div>
+                                        </div>
+                                    </div>
+                                <div class="col-3">
+                                        <div class="card text-bg-light mb-3" style="width: 8rem;">
+                                            <div class="card-header">新訪客</div>
+                                            <div class="card-body">
+                                            <p class="card-text">{{ "{:,}".format(da.get("new_visitors")|int)}}位</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="card text-bg-light mb-3" style="width: 8rem;">
+                                            <div class="card-header">喜歡產品</div>
+                                            <div class="card-body">
+                                            <p class="card-text">{{ "{:,}".format(da.get("product_likes")|int)}}項</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="card text-bg-light mb-3" style="width: 8rem;">
+                                            <div class="card-header">點擊次數</div>
+                                            <div class="card-body">
+                                            <p class="card-text">{{ "{:,}".format(da.get("search_clicks")|int)}}次</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="card text-bg-light mb-3" style="width: 8rem;">
+                                            <div class="card-header">新粉絲</div>
+                                            <div class="card-body">
+                                            <p class="card-text">{{ "{:,}".format(da.get("new_fans")|int)}}位</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="card text-bg-light mb-3" style="width: 8rem;">
+                                            <div class="card-header">回頭客</div>
+                                            <div class="card-body">
+                                            <p class="card-text">{{ "{:,}".format(da.get("return_visitors")|int) }}位</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="card text-bg-light mb-3" style="width: 8rem;">
+                                            <div class="card-header">停留時間</div>
+                                            <div class="card-body">
+                                            <p class="card-text">{{ "{:,}".format(da.get("step_times")|int)}}秒</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+                </div>  
+            </div>
+            <div class="col-2 score-col">
+                <div class="score-text" style="text-align: center;">
+                    <h3 class="score-text">{{ ds|safe }}分</h3>
+                </div>
+                <div class="scrollable-container"> 
+                    <div class="warning-reminder reminder">
+                        {% set di = di | default({})%}
+                        <div class="alert alert-orange" role="alert">
+                            {{ di.get("product_page_views")}}
+                        </div>
+                        <div class="alert alert-orange" role="alert">
+                            {{ di.get("step_times")}}
+                        </div>
+                        <div class="alert alert-orange" role="alert">
+                            {{ di.get("product_likes")}}
+                        </div>
+                        <div class="alert alert-orange2" role="alert">
+                            {{ di.get("search_clicks")}}
+                        </div>
+                        <div class="alert alert-orange2" role="alert">
+                            {{ di.get("new_fans")}}
+                        </div>
+                        <div class="alert alert-orange2" role="alert">
+                            {{ di.get("product_page_bounce_rate")}}
+                        </div>
+                        <div class="alert alert-orange2" role="alert">
+                            {{ di.get("unique_visitors")}}
+                        </div>
+                        <div class="alert alert-orange2" role="alert">
+                            {{ di.get("new_visitors")}}
+                        </div>
+                        <div class="alert alert-orange2" role="alert">
+                            {{ di.get("return_visitors")}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+    
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
